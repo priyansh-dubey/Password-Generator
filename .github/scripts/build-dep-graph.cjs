@@ -4,15 +4,17 @@ const path = require("path");
 const fs = require("fs");
 
 try {
-  const outputFile = path.join(__dirname, "../../dependency-graph.dot");
+  const outDir = path.join(__dirname, "../../.github/ai");
+  fs.mkdirSync(outDir, { recursive: true });
+  const outputFile = path.join(outDir, "dep-graph.json");
 
-  // Run depcruise CLI via npx
-  const dotOutput = execSync(
-    `npx depcruise src --output-type=dot`,
+  // Run depcruise CLI to output JSON (NOT dot)
+  const jsonOutput = execSync(
+    `npx depcruise src --output-type=json`,
     { encoding: "utf-8" }
   );
 
-  fs.writeFileSync(outputFile, dotOutput, "utf-8");
+  fs.writeFileSync(outputFile, jsonOutput, "utf-8");
 
   console.log("✅ Dependency graph generated at:", outputFile);
 } catch (err) {
